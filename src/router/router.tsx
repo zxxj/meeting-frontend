@@ -1,22 +1,11 @@
-import { Link, Outlet, createBrowserRouter } from 'react-router-dom';
+import { Outlet, createBrowserRouter } from 'react-router-dom';
 import { Login } from '../pages/Login';
 import { Register } from '../pages/Register';
 import { UpdatePassword } from '../pages/UpdatePassword';
 import { Error } from '../pages/Error';
 
 const Layout = () => {
-  return (
-    <div>
-      <div>
-        <Link to="/login">login</Link>
-        <Link to="/register">register</Link>
-      </div>
-
-      <div>
-        <Outlet />
-      </div>
-    </div>
-  );
+  return <Outlet />;
 };
 
 export const routes = [
