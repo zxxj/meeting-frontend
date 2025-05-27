@@ -2,7 +2,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -10,7 +9,7 @@ import { LoginForm } from './components/LoginForm';
 
 export const Login = () => {
   return (
-    <div className="w-screen h-screen">
+    <div className="w-screen h-screen ">
       <div className="w-full h-full flex items-center justify-center">
         <Card className="w-[500px]">
           <CardHeader>
