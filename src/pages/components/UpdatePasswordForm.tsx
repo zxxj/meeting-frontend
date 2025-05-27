@@ -15,8 +15,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Link, useNavigate } from 'react-router-dom';
-import type { UserRegisterForm } from '@/types/user';
-import { register, sendCaptcha } from '@/service/modules/user';
+import type { UserUpdatePasswordForm } from '@/types/user';
+import { sendCaptcha, updatePassword } from '@/service/modules/user';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 
@@ -24,9 +24,6 @@ const formSchema = z
   .object({
     username: z.string().min(2, {
       message: '用户名不能为空!',
-    }),
-    nickname: z.string().min(2, {
-      message: '昵称不能为空!',
     }),
     password: z.string().min(2, {
       message: '密码不能为空!',
@@ -46,7 +43,7 @@ const formSchema = z
     message: '两次密码输入不一致!',
   });
 
-export function RegisterForm() {
+export function UpdatePasswordForm() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -55,7 +52,6 @@ export function RegisterForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: '',
-      nickname: '',
       password: '',
       repassword: '',
       email: '',
@@ -64,26 +60,25 @@ export function RegisterForm() {
   });
 
   // 处理表单提交
-  const onSubmit = async (data: UserRegisterForm) => {
+  const onSubmit = async (data: UserUpdatePasswordForm) => {
     setLoading(true);
     console.log('表单提交的数据:', data);
     try {
-      const { code } = await register(data);
+      const { code, data: res } = await updatePassword(data);
       if (code === 200 || code === 201) {
-        toast('注册成功!', {
+        toast('密码更新成功!', {
           description: '即将跳转到登录页面',
           action: {
             label: '关闭',
             onClick: () => console.log('Undo'),
           },
         });
-
         setTimeout(() => {
           navigate('/login');
         }, 2000);
       } else {
-        toast('注册失败!', {
-          description: `错误信息: 请求超时`,
+        toast('密码更新失败!', {
+          description: `${res}`,
           action: {
             label: '关闭',
             onClick: () => console.log('Undo'),
@@ -92,7 +87,7 @@ export function RegisterForm() {
       }
     } catch (error) {
       console.log(error);
-      toast('注册接口超时!', {
+      toast('修改密码接口超时!', {
         description: `!!`,
         action: {
           label: '关闭',
@@ -107,7 +102,7 @@ export function RegisterForm() {
   const send = async () => {
     const values = form.getValues();
     try {
-      const { code, data } = await sendCaptcha('register', values.email);
+      const { code, data } = await sendCaptcha('password', values.email);
 
       if (code === 200 || code === 201) {
         toast('成功!', {
@@ -148,32 +143,8 @@ export function RegisterForm() {
             <FormItem>
               <div className="flex">
                 <FormLabel className="w-16">用户名:</FormLabel>
-                <FormControl className="flex-4/5">
-                  <Input
-                    placeholder="请输入用户名"
-                    autoComplete="username"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </div>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="nickname"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex">
-                <FormLabel className="w-16">昵称:</FormLabel>
                 <FormControl className="flex-1">
-                  <Input
-                    placeholder="请输入昵称"
-                    autoComplete="nickname"
-                    {...field}
-                  />
+                  <Input placeholder="请输入用户名" {...field} />
                 </FormControl>
                 <FormMessage />
               </div>
@@ -277,7 +248,7 @@ export function RegisterForm() {
         />
 
         <div className="flex justify-end mb-2">
-          <Button variant="link" type="button">
+          <Button variant="link">
             <Link to="/login">已有账号? 去登录</Link>
           </Button>
         </div>
@@ -289,10 +260,10 @@ export function RegisterForm() {
           {loading ? (
             <div className="flex items-center justify-center">
               <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              注册中...
+              更新中...
             </div>
           ) : (
-            '注册'
+            '更新'
           )}
         </Button>
       </form>

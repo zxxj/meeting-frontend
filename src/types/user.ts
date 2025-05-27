@@ -78,3 +78,27 @@ export interface SendCaptchaVo {
   data: string;
   message: string;
 }
+
+// 更新密码表单
+export interface UserUpdatePasswordForm {
+  username: string;
+  email: string;
+  captcha: string;
+  password: string;
+  repassword: string;
+}
+
+// 更新密码dto
+export interface UserUpdatePasswordDto {
+  username: string;
+  email: string;
+  captcha: string;
+  password: string;
+}
+
+// 更新密码vo
+export interface UserUpdatePasswordVo {
+  code: number;
+  data: string;
+  message: string;
+}

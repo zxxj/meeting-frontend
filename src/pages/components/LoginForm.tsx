@@ -74,6 +74,7 @@ export function LoginForm() {
         });
       }
     } catch (error) {
+      console.log(error);
       toast('登陆接口超时!', {
         description: `!!`,
         action: {
@@ -131,7 +132,7 @@ export function LoginForm() {
         />
 
         <div className="flex justify-between mb-2">
-          <Button variant="link">
+          <Button variant="link" type="button">
             <Link to="/register">没有账号? 去注册</Link>
           </Button>
           <Button variant="link" type="button">
