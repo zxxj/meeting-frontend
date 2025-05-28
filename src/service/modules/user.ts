@@ -1,6 +1,9 @@
 import type {
+  ListUpdateUserInfoVo,
   LoginUserVo,
   SendCaptchaVo,
+  UpdateUserInfoDto,
+  UpdateUserInfoVo,
   UserLogin,
   UserRegisterDto,
   UserRegisterVo,
@@ -8,6 +11,7 @@ import type {
   UserUpdatePasswordVo,
 } from '@/types/user';
 import { http } from '../index';
+import { getTwoToken } from '@/utils/getToken';
 
 const PATH = 'user';
 
@@ -32,4 +36,22 @@ export const updatePassword = async (
   dto: UserUpdatePasswordDto,
 ): Promise<UserUpdatePasswordVo> => {
   return await http.post(`${PATH}/update_password`, dto);
+};
+
+export const getUserInfo = async (): Promise<ListUpdateUserInfoVo> => {
+  return await http.get(`${PATH}/info`);
+};
+
+export const refreshToken = () => {
+  return http.get(`${PATH}/refresh`, {
+    params: {
+      refresh_token: getTwoToken().refreshToken,
+    },
+  });
+};
+
+export const update = async (
+  dto: UpdateUserInfoDto,
+): Promise<UpdateUserInfoVo> => {
+  return await http.post(`${PATH}/update`, dto);
 };

@@ -1,23 +1,30 @@
-import { Outlet, createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import { Login } from '@/pages/Login';
 import { Register } from '@/pages/Register';
 import { UpdatePassword } from '@/pages/UpdatePassword';
 import { Error } from '@/pages/Error';
-import { Toaster } from 'sonner';
-
-const Layout = () => {
-  return (
-    <>
-      <Outlet />
-      <Toaster />
-    </>
-  );
-};
+import MainLayout from '@/layout/MainLayout';
+import AuthLayout from '@/layout/AuthLayout';
 
 export const routes = [
   {
     path: '/',
-    element: <Layout />,
+    element: <MainLayout />,
+    errorElement: <Error />,
+    children: [
+      {
+        path: '/aaa',
+        element: <div>123</div>,
+      },
+      {
+        path: '/bbb',
+        element: <div>bbb</div>,
+      },
+    ],
+  },
+  {
+    path: '/',
+    element: <AuthLayout />,
     errorElement: <Error />,
     children: [
       {

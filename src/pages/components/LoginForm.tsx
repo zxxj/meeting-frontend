@@ -59,7 +59,7 @@ export function LoginForm() {
           },
         });
 
-        setItem('assess_token', res.accessToken);
+        setItem('access_token', res.accessToken);
         setItem('refresh_token', res.refreshToken);
         setItem('user_info', JSON.stringify(res.userInfo));
 
