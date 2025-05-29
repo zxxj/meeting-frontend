@@ -21,14 +21,20 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { getUserInfo, sendCaptcha, update } from '@/service/modules/user';
+import {
+  getUserInfo,
+  sendCaptcha,
+  update,
+  upload,
+} from '@/service/modules/user';
 import type { UpdateUserInfoForm } from '@/types/user';
 import { Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 const formSchema = z.object({
   avatar: z.string().min(2, {
-    message: '头像不能为空!',
+    message: '请上传头像!',
   }),
   username: z.string().min(2, {
     message: '用户名不能为空!',
@@ -149,6 +155,23 @@ export const UpdateUserInfo = ({
     form.reset({ avatar, nickname, email, username, phoneNumber });
   };
 
+  const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const { data } = await upload(formData);
+      console.log(data);
+      form.setValue('avatar', data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (!open) return;
     fetchUserInfo();
@@ -165,21 +188,45 @@ export const UpdateUserInfo = ({
               <FormField
                 control={form.control}
                 name="avatar"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex">
-                      <FormLabel className="w-14">头像:</FormLabel>
-                      <FormControl className="flex-1">
-                        <Input
-                          placeholder="请输入用户名"
-                          autoComplete="username"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const avatarUrl = form.watch('avatar');
+                  return (
+                    <FormItem>
+                      <div className="flex items-center gap-4">
+                        <FormLabel className="w-14">头像:</FormLabel>
+                        <FormControl className="flex-1">
+                          <div className="flex items-center gap-4">
+                            <Avatar className="w-16 h-16">
+                              <AvatarImage
+                                src={
+                                  avatarUrl
+                                    ? `http://localhost:3000/${avatarUrl}`
+                                    : 'https://github.com/shadcn.png'
+                                }
+                                alt="头像"
+                              />
+                            </Avatar>
+                            {!avatarUrl && (
+                              <input type="file" onChange={uploadFile} />
+                            )}
+                            {avatarUrl && (
+                              <button
+                                type="button"
+                                className="text-sm text-blue-600 underline"
+                                onClick={() => {
+                                  form.setValue('avatar', '');
+                                }}
+                              >
+                                更换头像
+                              </button>
+                            )}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  );
+                }}
               />
               <FormField
                 control={form.control}

@@ -55,3 +55,7 @@ export const update = async (
 ): Promise<UpdateUserInfoVo> => {
   return await http.post(`${PATH}/update`, dto);
 };
+
+export const upload = async (file: any) => {
+  return await http.post(`${PATH}/upload`, file);
+};
